@@ -1,0 +1,31 @@
+version: "3.9"  # optional since v1.27.0
+
+services:
+  mongo:
+    container_name : mongo
+    image: mongo:latest
+    ports: 
+      - "27016:27017"
+    networks: 
+      - node_network
+    volumes:
+      - data_mongodb:/data/db
+  app-node:
+    container_name: app-node
+    image: app-node:1.0
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongo
+    environment:
+      - DB_HOST=mongo
+      - DB_PORT=27017
+    networks: 
+      - node_network
+
+networks: 
+  node_network:
+    name: node_network
+
+volumes:
+  data_mongodb:
